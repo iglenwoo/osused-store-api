@@ -1,12 +1,11 @@
 version: '3.7'
 services:
-
   mongo:
     container_name: mongo
     image: mongo:4.2
     restart: always
     ports:
-      - "27017:27017"
+      - 27017:27017
     networks:
       - db
     environment:
@@ -33,4 +32,4 @@ volumes:
   mongo:
 
 networks:
-  ? db
+  db:
