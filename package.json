@@ -8,12 +8,15 @@
     "test:watch": "jest --watch"
   },
   "dependencies": {
+    "bluebird": "^3.7.0",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
     "express": "~4.16.1",
     "http-errors": "~1.6.3",
     "jade": "~1.11.0",
-    "morgan": "~1.9.1"
+    "mongoose": "^5.7.4",
+    "morgan": "~1.9.1",
+    "saslprep": "^1.0.3"
   },
   "devDependencies": {
     "husky": "^3.0.8",

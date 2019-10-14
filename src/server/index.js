@@ -3,8 +3,27 @@ const express = require('express')
 const cookieParser = require('cookie-parser')
 const logger = require('morgan')
 const router = require('../routes')
+const mongoose = require('mongoose')
+Promise = require('bluebird')
+
+mongoose.Promise = Promise
 
 const app = express()
+
+const url =
+  'mongodb://root:password@localhost:27017/osused-store?authSource=admin'
+mongoose.connect(url, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
+mongoose.connection.on('error', err => {
+  console.error(err)
+  throw new Error(`unable to connect to database: ${url}`)
+})
+mongoose.connection.once('open', () => {
+  console.log(`connected to database: ${url}`)
+  app.db = mongoose.connection
+})
 
 app.use(logger('dev'))
 app.use(express.json())
