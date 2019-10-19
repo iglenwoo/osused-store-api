@@ -1,5 +1,7 @@
 const createError = require('http-errors')
 const express = require('express')
+const multer = require('multer')
+const upload = multer()
 const cookieParser = require('cookie-parser')
 const logger = require('morgan')
 const router = require('../routes')
@@ -28,6 +30,7 @@ mongoose.connection.once('open', () => {
 app.use(logger('dev'))
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
+app.use(upload.array())
 app.use(cookieParser())
 
 app.use('/', router)
