@@ -1,7 +1,7 @@
 const User = require('../../models/user')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-const config = require('../../config.js')
+const config = require('../../../config.js')
 const saltRounds = 10
 
 const getUser = async (req, res, next) => {
