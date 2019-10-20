@@ -19,3 +19,32 @@ describe('Test /users', () => {
       })
   })
 })
+
+describe('Test users sign up and login success', () => {
+  let postUserData = {
+    email: 'corvallis@oregonstate.edu',
+    password: 'portland',
+    firstName: 'Test',
+    lastName: 'Hi',
+  }
+  test('POST a user', function(done) {
+    request(app)
+      .post('/users/signup')
+      .send(postUserData)
+      .set('Accept', 'application/json')
+      .then(response => {
+        expect(response.statusCode).toBe(400)
+        done()
+      })
+  })
+  test('User login', function(done) {
+    request(app)
+      .post('/users/login')
+      .send(postUserData)
+      .set('Accept', 'application/json')
+      .then(response => {
+        expect(response.statusCode).toBe(200)
+        done()
+      })
+  })
+})
