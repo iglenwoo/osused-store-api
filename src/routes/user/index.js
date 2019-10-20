@@ -1,5 +1,7 @@
 const User = require('../../models/user')
 const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
+const config = require('../../config.js')
 const saltRounds = 10
 
 const getUser = async (req, res, next) => {
@@ -32,9 +34,18 @@ const loginUser = async (req, res) => {
     let email = req.body.email
     let password = req.body.password
     const user = await User.findOne({ email: email })
-    const match = await bcrypt.compare(password, user.password)
-    if (match) res.status(200).json(user)
-    else res.status(400).json({})
+    bcrypt.compare(password, user.password, (err, decoded) => {
+      if (err) {
+        return res
+          .status(400)
+          .json({ success: false, message: 'Pass word is not match!!' })
+      } else {
+        let token = jwt.sign({ email: email }, config.secret, {
+          expiresIn: '24h',
+        })
+        return res.status(200).json(token)
+      }
+    })
   } catch (err) {
     console.error(err)
     res.status(500).json({ message: err.message })
