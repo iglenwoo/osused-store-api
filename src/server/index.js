@@ -9,12 +9,13 @@ Promise = require('bluebird')
 mongoose.Promise = Promise
 
 const app = express()
-
 const url =
   'mongodb://root:password@localhost:27017/osused-store?authSource=admin'
 mongoose.connect(url, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
+  useFindAndModify: false,
+  useCreateIndex: true,
 })
 mongoose.connection.on('error', err => {
   console.error(err)
