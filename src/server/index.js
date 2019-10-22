@@ -11,7 +11,6 @@ Promise = require('bluebird')
 mongoose.Promise = Promise
 
 const app = express()
-
 const url =
   'mongodb://root:password@localhost:27017/osused-store?authSource=admin'
 mongoose.connect(url, {
@@ -26,6 +25,7 @@ mongoose.connection.once('open', () => {
   console.log(`connected to database: ${url}`)
   app.db = mongoose.connection
 })
+mongoose.set('useFindAndModify', false)
 
 app.use(logger('dev'))
 app.use(express.json())
