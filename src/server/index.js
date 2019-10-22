@@ -1,7 +1,5 @@
 const createError = require('http-errors')
 const express = require('express')
-const multer = require('multer')
-const upload = multer()
 const cookieParser = require('cookie-parser')
 const logger = require('morgan')
 const router = require('../routes')
@@ -16,6 +14,8 @@ const url =
 mongoose.connect(url, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
+  useFindAndModify: false,
+  useCreateIndex: true,
 })
 mongoose.connection.on('error', err => {
   console.error(err)
@@ -25,12 +25,10 @@ mongoose.connection.once('open', () => {
   console.log(`connected to database: ${url}`)
   app.db = mongoose.connection
 })
-mongoose.set('useFindAndModify', false)
 
 app.use(logger('dev'))
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
-app.use(upload.array())
 app.use(cookieParser())
 
 app.use('/', router)
