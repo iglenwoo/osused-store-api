@@ -1,15 +1,14 @@
 const router = require('express').Router()
 
 const home = require('./home')
-const { getUser, getUsers, postUser, loginUser } = require('./user')
-const { checkToken } = require('./token/token')
+const { getUsers, postUser, loginUser } = require('./user')
+const { checkToken } = require('../middleware/auth')
 
 router.get('/', home)
-
-router.get('/users/:id', getUser)
-router.get('/users', getUsers)
 router.post('/users/signup', postUser)
 router.post('/users/login', loginUser)
-router.post('/checkToken', checkToken)
+router.get('/users', getUsers)
+
+router.get('/checkTokenExp', checkToken, home)
 
 module.exports = router
