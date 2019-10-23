@@ -80,7 +80,7 @@ const postUser = async (req, res) => {
     )
 
     if (newUser.lastErrorObject.updatedExisting !== true) {
-      let token = jwt.sign({ email: email }, config.secret, {
+      let token = jwt.sign({ email: req.body.email }, config.secret, {
         expiresIn: '24h',
       })
       res.status(200).json(token)
@@ -89,6 +89,7 @@ const postUser = async (req, res) => {
       res.status(409).end()
     }
   } catch (err) {
+    console.error(err)
     res.status(500).json({ message: err.message })
   }
 }
