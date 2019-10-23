@@ -34,22 +34,30 @@ const loginUser = async (req, res) => {
     let password = req.body.password
 
     const user = await User.findOne({ email: email })
-    if (user == null)
-      return res.status(409).json({ message: 'User is not found!!' })
+    if (user === null) {
+      res.statusMessage = 'User is not found!!'
+      res.status(409).end()
+    }
 
-    bcrypt.compare(password, user.password, err => {
+    bcrypt.compare(password, user.password, (err, match) => {
       if (err) {
-        return res.status(409).json({ message: 'Pass word is not match!!' })
-      } else {
+        res.statusMessage = err
+        res.status(500).end()
+      }
+
+      if (match) {
         let token = jwt.sign({ email: email }, config.secret, {
           expiresIn: '24h',
         })
-        return res.status(200).json(token)
+        res.status(200).json(token)
+      } else {
+        res.statusMessage = 'passwords do not match'
+        res.status(409).end()
       }
     })
   } catch (err) {
-    console.error(err)
-    res.status(500).json({ message: err.message })
+    res.statusMessage = err.message
+    res.status(500).end()
   }
 }
 
@@ -71,9 +79,15 @@ const postUser = async (req, res) => {
       { upsert: true, new: true, rawResult: true }
     )
 
-    if (newUser.lastErrorObject.updatedExisting !== true)
-      res.status(200).json(newUser)
-    else res.status(409).json({ message: 'The account is exist!!' })
+    if (newUser.lastErrorObject.updatedExisting !== true) {
+      let token = jwt.sign({ email: email }, config.secret, {
+        expiresIn: '24h',
+      })
+      res.status(200).json(token)
+    } else {
+      res.statusMessage = 'The account is exist!!'
+      res.status(409).end()
+    }
   } catch (err) {
     res.status(500).json({ message: err.message })
   }
