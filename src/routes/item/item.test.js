@@ -20,7 +20,7 @@ const mockItem = {
 }
 
 describe('Test /items', () => {
-  test('GET items', async done => {
+  test('GET items', done => {
     request(app)
       .get('/items')
       .then(response => {

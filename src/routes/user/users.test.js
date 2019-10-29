@@ -19,7 +19,7 @@ describe('Test /users', () => {
       })
   })
 
-  test('User sign up with new user', function(done) {
+  test('User sign up with new user', done => {
     request(app)
       .post('/users/signup')
       .send(mockUser)
@@ -29,7 +29,7 @@ describe('Test /users', () => {
         done()
       })
   })
-  test('User sign up with an existing user', function(done) {
+  test('User sign up with an existing user', done => {
     request(app)
       .post('/users/signup')
       .send(mockUser)
@@ -39,7 +39,7 @@ describe('Test /users', () => {
         done()
       })
   })
-  test('User login', function(done) {
+  test('User login', done => {
     request(app)
       .post('/users/login')
       .send(mockUser)
