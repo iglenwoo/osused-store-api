@@ -1,5 +1,13 @@
 const request = require('supertest')
 const app = require('../../server')
+const User = require('../../models/user')
+
+const mockUser = {
+  email: 'corvallis@oregonstate.edu',
+  password: 'portland',
+  firstName: 'Test',
+  lastName: 'Hi',
+}
 
 describe('Test /users', () => {
   test('GET users', done => {
@@ -10,19 +18,11 @@ describe('Test /users', () => {
         done()
       })
   })
-})
 
-describe('Test users sign up and login success', () => {
-  let postUserData = {
-    email: 'corvallis@oregonstate.edu',
-    password: 'portland',
-    firstName: 'Test',
-    lastName: 'Hi',
-  }
   test('User sign up with new user', function(done) {
     request(app)
       .post('/users/signup')
-      .send(postUserData)
+      .send(mockUser)
       .set('Accept', 'application/json')
       .then(response => {
         expect(response.statusCode).toBe(200)
@@ -32,7 +32,7 @@ describe('Test users sign up and login success', () => {
   test('User sign up with an existing user', function(done) {
     request(app)
       .post('/users/signup')
-      .send(postUserData)
+      .send(mockUser)
       .set('Accept', 'application/json')
       .then(response => {
         expect(response.statusCode).toBe(409)
@@ -42,11 +42,17 @@ describe('Test users sign up and login success', () => {
   test('User login', function(done) {
     request(app)
       .post('/users/login')
-      .send(postUserData)
+      .send(mockUser)
       .set('Accept', 'application/json')
       .then(response => {
         expect(response.statusCode).toBe(200)
         done()
       })
+  })
+
+  afterAll(async () => {
+    await User.findOne({ email: mockUser.email }).remove(() => {
+      console.info(`Email ${mockUser.email} removed.`)
+    })
   })
 })
