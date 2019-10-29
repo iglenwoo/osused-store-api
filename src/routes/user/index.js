@@ -49,7 +49,12 @@ const loginUser = async (req, res) => {
         let token = jwt.sign({ email: email }, config.secret, {
           expiresIn: '24h',
         })
-        res.status(200).json(token)
+        res.status(200).json({
+          user: {
+            email,
+          },
+          token,
+        })
       } else {
         res.statusMessage = 'passwords do not match'
         res.status(409).end()
