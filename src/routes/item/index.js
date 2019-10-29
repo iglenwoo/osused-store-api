@@ -27,7 +27,7 @@ const getItems = async function(req, res) {
 
 const postItem = async function(req, res) {
   try {
-    const newItem = new Item.create(req.body)
+    const newItem = await Item.create(req.body)
     res.status(200).json(newItem)
   } catch (err) {
     console.error(err)

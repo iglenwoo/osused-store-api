@@ -50,9 +50,7 @@ const loginUser = async (req, res) => {
           expiresIn: '24h',
         })
         res.status(200).json({
-          user: {
-            email,
-          },
+          user,
           token,
         })
       } else {

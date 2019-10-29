@@ -51,7 +51,7 @@ describe('Test /users', () => {
   })
 
   afterAll(async () => {
-    await User.findOne({ email: mockUser.email }).remove(() => {
+    await User.deleteOne({ email: mockUser.email }, () => {
       console.info(`Email ${mockUser.email} removed.`)
     })
   })
