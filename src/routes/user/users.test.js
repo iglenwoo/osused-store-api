@@ -19,7 +19,17 @@ describe('Test users sign up and login success', () => {
     firstName: 'Test',
     lastName: 'Hi',
   }
-  test('User sign up', function(done) {
+  test('User sign up with new user', function(done) {
+    request(app)
+      .post('/users/signup')
+      .send(postUserData)
+      .set('Accept', 'application/json')
+      .then(response => {
+        expect(response.statusCode).toBe(200)
+        done()
+      })
+  })
+  test('User sign up with an existing user', function(done) {
     request(app)
       .post('/users/signup')
       .send(postUserData)

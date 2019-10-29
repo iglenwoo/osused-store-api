@@ -68,27 +68,33 @@ const loginUser = async (req, res) => {
 
 const postUser = async (req, res) => {
   try {
-    let salt = bcrypt.genSaltSync(saltRounds)
-    let hash = bcrypt.hashSync(req.body.password, salt)
+    const { email, password, firstName, lastName } = req.body
+    const salt = bcrypt.genSaltSync(saltRounds)
+    const hash = bcrypt.hashSync(password, salt)
 
     //If data is not found then insert
     let newUser = await User.findOneAndUpdate(
-      { email: req.body.email },
+      { email },
       {
         $setOnInsert: {
           password: hash,
-          firstName: req.body.firstName,
-          lastName: req.body.lastName,
+          firstName,
+          lastName,
         },
       },
       { upsert: true, new: true, rawResult: true }
     )
 
     if (newUser.lastErrorObject.updatedExisting !== true) {
-      let token = jwt.sign({ email: req.body.email }, config.secret, {
+      const token = jwt.sign({ email }, config.secret, {
         expiresIn: '24h',
       })
-      res.status(200).json(token)
+      res.status(200).json({
+        user: {
+          email,
+        },
+        token,
+      })
     } else {
       res.statusMessage = 'The account is exist!!'
       res.status(409).end()
