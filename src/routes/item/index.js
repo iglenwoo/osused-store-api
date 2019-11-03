@@ -20,7 +20,10 @@ const getItem = async function(req, res, next) {
 
 const getItems = async function(req, res) {
   try {
-    const items = await Item.find()
+    query = {}
+    setQueryCondition(query, 'category', req.query.category)
+    setQueryCondition(query, 'name', req.query.name)
+    const items = await Item.find(query)
     res.status(200).json(items)
   } catch (err) {
     console.error(err)
@@ -50,22 +53,9 @@ const editItem = async function(req, res) {
   }
 }
 
-const getItemsByConditions = async function(req, res) {
-  try {
-    query = {}
-    setQueryCondition(query, 'category', req.query.category)
-    setQueryCondition(query, 'name', req.query.name)
-    const items = await Item.find(query)
-    res.status(200).json(items)
-  } catch (err) {
-    setRespondMsg(res, 500, err.message).json()
-  }
-}
-
 module.exports = {
   getItem,
   getItems,
   postItem,
   editItem,
-  getItemsByConditions,
 }
