@@ -43,6 +43,16 @@ describe('Test /items', () => {
       })
   })
 
+  test('Get Mock item 1', async done => {
+    request(app)
+      .get(`/items?name=${mockItem.name}&category=${mockItem.category}`)
+      .set('Accept', 'application/json')
+      .then(res => {
+        expect(res.statusCode).toBe(200)
+        done()
+      })
+  })
+
   afterAll(async () => {
     await User.deleteOne({ email: mockUser.email }, () => {
       console.info(`User ${mockUser.email} removed.`)
