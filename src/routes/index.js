@@ -3,7 +3,7 @@ const router = require('express').Router()
 const home = require('./home')
 const { getUsers, postUser, loginUser } = require('./user')
 const { getItems, getItem, postItem, editItem } = require('./item')
-const { checkToken } = require('../middleware/auth')
+const { auth, authMid } = require('../middleware/auth')
 
 router.get('/', home)
 router.post('/users/signup', postUser)
@@ -15,6 +15,7 @@ router.get('/items/:id', getItem)
 router.post('/items', postItem)
 router.put('/items/:id', editItem)
 
-router.get('/checkTokenExp', checkToken, home)
+router.get('/token', auth)
+router.get('/tokenTest', authMid, home)
 
 module.exports = router

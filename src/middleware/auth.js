@@ -1,31 +1,30 @@
 let jwt = require('jsonwebtoken')
 const config = require('../../config.js')
+const { setRespondMsg } = require('../_help/help')
 
-const checkToken = (req, res, next) => {
+const checkToken = (req, res, token) => {
+  if (!token) setRespondMsg(res, 400, 'Auth token is not supplied').end()
+
+  jwt.verify(token, config.secret, (err, decoded) => {
+    if (err) setRespondMsg(res, 401, 'Token is not valid').end()
+    req.decoded = decoded
+    console.log(decoded)
+  })
+}
+
+const authorizationMiddleware = async function(req, res, next) {
   let token = req.headers['x-access-token'] || req.headers['authorization']
+  checkToken(req, res, token)
+  next()
+}
 
-  if (token) {
-    if (token.startsWith('Bearer ')) {
-      token = token.slice(7, token.length)
-    }
-
-    jwt.verify(token, config.secret, (err, decoded) => {
-      if (err) {
-        return res
-          .status(400)
-          .json({ success: false, message: 'Token is not valid' })
-      } else {
-        req.decoded = decoded
-        next()
-      }
-    })
-  } else {
-    return res
-      .status(400)
-      .json({ success: false, message: 'Auth token is not supplied' })
-  }
+const authorization = async function(req, res) {
+  let token = req.headers['x-access-token'] || req.headers['authorization']
+  checkToken(req, res, token)
+  setRespondMsg(res, 200, 'Token is pass').end()
 }
 
 module.exports = {
-  checkToken: checkToken,
+  authMid: authorizationMiddleware,
+  auth: authorization,
 }
