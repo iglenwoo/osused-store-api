@@ -15,7 +15,7 @@ router.get('/items/:id', getItem)
 router.post('/items', postItem)
 router.put('/items/:id', editItem)
 
-router.get('/token', auth)
+router.get('/chkToken', auth)
 router.get('/tokenTest', authMid, home)
 
 module.exports = router

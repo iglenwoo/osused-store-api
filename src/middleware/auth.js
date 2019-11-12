@@ -8,7 +8,6 @@ const checkToken = (req, res, token) => {
   jwt.verify(token, config.secret, (err, decoded) => {
     if (err) setRespondMsg(res, 401, 'Token is not valid').end()
     req.decoded = decoded
-    console.log(decoded)
   })
 }
 
@@ -21,7 +20,7 @@ const authorizationMiddleware = async function(req, res, next) {
 const authorization = async function(req, res) {
   let token = req.headers['x-access-token'] || req.headers['authorization']
   checkToken(req, res, token)
-  setRespondMsg(res, 200, 'Token is pass').end()
+  setRespondMsg(res, 200, 'Token is pass').json({ email: req.decoded.email })
 }
 
 module.exports = {
