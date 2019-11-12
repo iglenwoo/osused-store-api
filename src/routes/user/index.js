@@ -54,7 +54,7 @@ const loginUser = async (req, res) => {
           token,
         })
       } else {
-        res.statusMessage = 'passwords do not match'
+        res.statusMessage = 'Password does not match'
         res.status(409).end()
       }
     })
