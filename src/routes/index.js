@@ -14,7 +14,7 @@ router.get('/items', getItems)
 router.get('/items/:id', getItem)
 router.post('/items', authMid, postItem)
 router.put('/items/:id', editItem)
-router.post('/items/:id', deleteItem)
+router.delete('/items/:id', deleteItem)
 router.get('/chkToken', auth)
 router.get('/tokenTest', authMid, home)
 

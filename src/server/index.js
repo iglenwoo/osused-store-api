@@ -61,5 +61,13 @@ app.use(function(err, req, res, next) {
     error: err,
   })
 })
+//enable CORS
+app.use(function(req, res, next) {
+  res.set("Access-Control-Allow-Origin", "*");
+  res.set('Access-Control-Allow-Methods', 'DELETE') // Add this!
+  // res.setHeader("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT,DELETE");
+  res.set("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+  next();
+});
 
 module.exports = app
