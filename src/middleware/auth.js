@@ -14,13 +14,14 @@ const checkToken = (req, res, token) => {
 const authorizationMiddleware = async function(req, res, next) {
   let token = req.headers['x-access-token'] || req.headers['authorization']
   checkToken(req, res, token)
-  next()
+  if (!res.finished) next()
 }
 
 const authorization = async function(req, res) {
   let token = req.headers['x-access-token'] || req.headers['authorization']
   checkToken(req, res, token)
-  setRespondMsg(res, 200, 'Token is pass').json({ email: req.decoded.email })
+  if (!res.finished)
+    setRespondMsg(res, 200, 'Token is pass').json({ email: req.decoded.email })
 }
 
 module.exports = {
