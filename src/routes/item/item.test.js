@@ -1,4 +1,6 @@
 const request = require('supertest')
+const jwt = require('jsonwebtoken')
+const config = require('../../../config')
 const app = require('../../server')
 const Item = require('../../models/item')
 const User = require('../../models/user')
@@ -33,10 +35,18 @@ describe('Test /items', () => {
     const user = await User.create(mockUser)
     mockItem.ownerId = user._id
 
+    const token = jwt.sign({ email: mockUser.email }, config.secret, {
+      expiresIn: '24h',
+    })
+    const header = {
+      Accept: 'application/json',
+      Authorization: `Bearer ${token}`,
+    }
+
     request(app)
       .post('/items')
       .send(mockItem)
-      .set('Accept', 'application/json')
+      .set(header)
       .then(res => {
         expect(res.statusCode).toBe(200)
         done()
