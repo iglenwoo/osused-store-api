@@ -1,4 +1,6 @@
 const Item = require('../../models/item')
+const User = require('../../models/user')
+
 const { setQueryCondition, setRespondMsg } = require('../../_help/help')
 const ObjectId = require('mongoose').Types.ObjectId
 
@@ -33,6 +35,8 @@ const getItems = async function(req, res) {
 
 const postItem = async function(req, res) {
   try {
+    const user = await User.findOne({ email: req.decoded.email })
+    req.body.ownerId = user._id
     const newItem = await Item.create(req.body)
     res.status(200).json(newItem)
   } catch (err) {
