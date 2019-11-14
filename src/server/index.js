@@ -12,12 +12,6 @@ const app = express()
 const url =
   process.env.DB_HOST ||
   'mongodb://root:password@localhost:27017/osused-store?authSource=admin'
-mongoose.connect(url, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  useFindAndModify: false,
-  useCreateIndex: true,
-})
 mongoose.connection.on('error', err => {
   console.error(err)
   throw new Error(`unable to connect to database: ${url}`)
@@ -26,6 +20,15 @@ mongoose.connection.once('open', () => {
   console.log(`connected to database: ${url}`)
   app.db = mongoose.connection
 })
+const run = async () => {
+  await mongoose.connect(url, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useFindAndModify: false,
+    useCreateIndex: true,
+  })
+}
+run().catch(error => console.error(error))
 
 app.use(logger('dev'))
 app.use(express.json())

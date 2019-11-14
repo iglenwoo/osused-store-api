@@ -54,5 +54,7 @@ describe('Test /users', () => {
     await User.deleteOne({ email: mockUser.email }, () => {
       console.info(`Email ${mockUser.email} removed.`)
     })
+
+    await app.db.close()
   })
 })

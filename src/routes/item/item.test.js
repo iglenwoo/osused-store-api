@@ -77,5 +77,7 @@ describe('Test /items', () => {
         console.info(`Item ${mockItem.name} removed.`)
       }
     )
+
+    await app.db.close()
   })
 })
