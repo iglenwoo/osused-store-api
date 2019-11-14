@@ -13,8 +13,15 @@ const checkToken = (req, res, token) => {
 }
 
 const authorizationMiddleware = async function(req, res, next) {
-  let token = req.headers['x-access-token'] || req.headers['authorization']
-  checkToken(req, res, token)
+  const authStr = req.headers['x-access-token'] || req.headers['authorization']
+  const bearers = authStr.split(' ')
+  if (bearers.length < 2)
+    return setRespondMsg(
+      res,
+      400,
+      'Auth token is not supplied as in `bearer [TOKEN]`'
+    ).end()
+  checkToken(req, res, bearers[1])
   if (!res.finished) next()
 }
 
