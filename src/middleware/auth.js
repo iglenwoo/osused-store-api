@@ -1,12 +1,13 @@
 let jwt = require('jsonwebtoken')
 const config = require('../../config.js')
 const { setRespondMsg } = require('../_help/help')
+const User = require('../models/user')
 
 const checkToken = (req, res, token) => {
-  if (!token) setRespondMsg(res, 400, 'Auth token is not supplied').end()
+  if (!token) return setRespondMsg(res, 400, 'Auth token is not supplied').end()
 
-  jwt.verify(token, config.secret, (err, decoded) => {
-    if (err) setRespondMsg(res, 401, 'Token is not valid').end()
+  jwt.verify(token, config.secret, async function handle(err, decoded) {
+    if (err) return setRespondMsg(res, 401, 'Token is not valid').end()
     req.decoded = decoded
   })
 }
@@ -20,8 +21,13 @@ const authorizationMiddleware = async function(req, res, next) {
 const authorization = async function(req, res) {
   let token = req.headers['x-access-token'] || req.headers['authorization']
   checkToken(req, res, token)
-  if (!res.finished)
-    setRespondMsg(res, 200, 'Token is pass').json({ email: req.decoded.email })
+  if (res.finished) return
+
+  const user = await User.findOne({ email: req.decoded.email })
+  setRespondMsg(res, 200, 'Token is pass').json({
+    userId: user._id,
+    email: req.decoded.email,
+  })
 }
 
 module.exports = {
