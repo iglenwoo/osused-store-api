@@ -12,7 +12,7 @@ router.get('/users', getUsers)
 
 router.get('/items', getItems)
 router.get('/items/:id', getItem)
-router.post('/items', postItem)
+router.post('/items', authMid, postItem)
 router.put('/items/:id', editItem)
 
 router.get('/chkToken', auth)
