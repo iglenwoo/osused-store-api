@@ -26,8 +26,15 @@ const authorizationMiddleware = async function(req, res, next) {
 }
 
 const authorization = async function(req, res) {
-  let token = req.headers['x-access-token'] || req.headers['authorization']
-  checkToken(req, res, token)
+  let authStr = req.headers['x-access-token'] || req.headers['authorization']
+  const bearers = authStr.split(' ')
+  if (bearers.length < 2)
+    return setRespondMsg(
+      res,
+      400,
+      'Auth token is not supplied as in `bearer [TOKEN]`'
+    ).end()
+  checkToken(req, res, bearers[1])
   if (res.finished) return
 
   const user = await User.findOne({ email: req.decoded.email })
