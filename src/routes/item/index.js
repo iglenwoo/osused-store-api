@@ -24,8 +24,11 @@ const getItems = async function(req, res) {
   try {
     query = {}
     setQueryCondition(query, 'category', req.query.category)
-    setQueryCondition(query, 'name', req.query.name)
-    const items = await Item.find(query)
+    setQueryCondition(query, 'name', { $regex: req.query.name, $options: 'i' })
+    const items = await Item.find(query).collation({
+      locale: 'en',
+      strength: 1,
+    })
     res.status(200).json(items)
   } catch (err) {
     console.error(err)
