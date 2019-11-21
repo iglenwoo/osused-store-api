@@ -24,7 +24,7 @@ const getItems = async function(req, res) {
   try {
     query = {}
     setQueryCondition(query, 'category', req.query.category)
-    setQueryCondition(query, 'name', req.query.name)
+    setQueryCondition(query, 'name', { $regex: req.query.name, $options: 'i' })
     const items = await Item.find(query)
     res.status(200).json(items)
   } catch (err) {
