@@ -57,9 +57,24 @@ const editItem = async function(req, res) {
   }
 }
 
+const deleteItem = async function(req, res) {
+  try {
+    const item = await Item.findById(req.params.id).exec()
+    const result = await Item.deleteOne(item)
+    if (result.ok !== 1){
+      throw new Error('Deleting an item failed')
+    }
+    res.status(200).send(item)
+  } catch (err) {
+    console.error(err)
+    res.status(500).json({ message: err.message })
+  }
+}
+
 module.exports = {
   getItem,
   getItems,
   postItem,
   editItem,
+  deleteItem,
 }
