@@ -1,5 +1,7 @@
-function setQueryCondition(query, columnName, value) {
-  if (value) query[columnName] = value
+function setQueryCondition(query, columnName, value, flag) {
+  if (value && flag === 'i')
+    query[columnName] = { $regex: new RegExp('^' + value, 'i') }
+  else if (value) query[columnName] = value
 }
 
 function setRespondMsg(res, code, msg) {
