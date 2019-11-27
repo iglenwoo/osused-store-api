@@ -1,6 +1,6 @@
 function setQueryCondition(query, columnName, value, flag) {
   if (value && flag === 'i')
-    query[columnName] = { $regex: new RegExp('^' + value, 'i') }
+    query[columnName] = { $regex: value, $options: 'i' }
   else if (value) query[columnName] = value
 }
 
