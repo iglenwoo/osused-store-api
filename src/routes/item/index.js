@@ -24,7 +24,7 @@ const getItems = async function(req, res) {
   try {
     query = {}
     setQueryCondition(query, 'category', req.query.category)
-    setQueryCondition(query, 'name', { $regex: req.query.name, $options: 'i' })
+    setQueryCondition(query, 'name', req.query.name, 'i')
     const items = await Item.find(query)
     res.status(200).json(items)
   } catch (err) {
@@ -61,7 +61,7 @@ const deleteItem = async function(req, res) {
   try {
     const item = await Item.findById(req.params.id).exec()
     const result = await Item.deleteOne(item)
-    if (result.ok !== 1){
+    if (result.ok !== 1) {
       throw new Error('Deleting an item failed')
     }
     res.status(200).send(item)
