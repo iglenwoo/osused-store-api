@@ -63,6 +63,24 @@ describe('Test /items', () => {
       })
   })
 
+  test('Delete Mock item 1', done => {
+    const token = jwt.sign({ Uid: mockUser.ownerId }, config.secret, {
+      expiresIn: '24h',
+    })
+    const header = {
+      Accept: 'application/json',
+      Authorization: `Bearer ${token}`,
+    }
+
+    request(app)
+      .delete(`/items/id=${mockItem._id}`)
+      .set(header)
+      .then(res => {
+        expect(res.statusCode).toBe(200)
+        done()
+      })
+  })
+
   afterAll(async () => {
     await User.deleteOne({ email: mockUser.email }, () => {
       console.info(`User ${mockUser.email} removed.`)
