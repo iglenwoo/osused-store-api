@@ -1,10 +1,7 @@
 let gfs = require('../../server')
-var Grid = require('gridfs-stream')
 
 const postImage = async function(req, res) {
   try {
-    console.log(req.files)
-    console.log('Image uploaded')
     res.status(200).json()
   } catch (err) {
     console.error(err)
@@ -13,7 +10,6 @@ const postImage = async function(req, res) {
 }
 
 const getImage = async function(req, res) {
-  console.log('Ви таки здесь')
   gfs.gfs
     .collection('images')
     .findOne({ filename: 'Design_paper.jpg/11/1/2019/13' }, (err, file) => {
@@ -26,8 +22,11 @@ const getImage = async function(req, res) {
         file.contentType === 'image/jpeg' ||
         file.contentType === 'image/png'
       ) {
-        console.log('Nu suda mi doshli')
-        console.log(file)
+        /*
+      Lines down below should open read stream and send it to client but =>
+      1. Cannot read property 'readPreference' of null
+      2. DeprecationWarning: GridStore is deprecated, and will be removed in a future version. Please use GridFSBucket instead
+       */
         //const readstream = gfs.gfs.createReadStream( {_id: '5de571cdda71167248c09c59'});
         // readstream.pipe(res);
       } else {
