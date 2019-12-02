@@ -27,6 +27,12 @@ const itemSchema = new Schema({
     type: Date,
     default: Date.now,
   },
+  imageName: {
+    type: String,
+  },
+  imageId: {
+    type: Schema.Types.ObjectId,
+  },
 })
 
 module.exports = mongoose.model('Item', itemSchema, 'items')

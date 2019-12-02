@@ -1,5 +1,6 @@
 const Item = require('../../models/item')
 const User = require('../../models/user')
+let gfs = require('../../server')
 
 const { setQueryCondition, setRespondMsg } = require('../../_help/help')
 const ObjectId = require('mongoose').Types.ObjectId
@@ -37,6 +38,10 @@ const postItem = async function(req, res) {
   try {
     const user = await User.findOne({ email: req.decoded.email })
     req.body.ownerId = user._id
+    let image = await gfs.gfs
+      .collection('images')
+      .findOne({ filename: req.body.imageName })
+    req.body.imageId = image._id
     const newItem = await Item.create(req.body)
     res.status(200).json(newItem)
   } catch (err) {
@@ -61,7 +66,7 @@ const deleteItem = async function(req, res) {
   try {
     const item = await Item.findById(req.params.id).exec()
     const result = await Item.deleteOne(item)
-    if (result.ok !== 1){
+    if (result.ok !== 1) {
       throw new Error('Deleting an item failed')
     }
     res.status(200).send(item)

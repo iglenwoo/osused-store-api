@@ -1,4 +1,4 @@
-var { app } = require('./server')
+var app = require('./server')
 var debug = require('debug')('osused-store-api:server')
 var http = require('http')
 

@@ -5,9 +5,6 @@ const logger = require('morgan')
 const router = require('../routes')
 const mongoose = require('mongoose')
 const Grid = require('gridfs-stream')
-const GridFsStorage = require('multer-gridfs-storage')
-const path = require('path')
-const crypto = require('crypto')
 
 Promise = require('bluebird')
 mongoose.Promise = Promise
@@ -22,32 +19,14 @@ mongoose.connection.on('error', err => {
   throw new Error(`unable to connect to database: ${url}`)
 })
 
-var gfs
+app.set('view engine', 'ejs')
+
+let gfs = Grid(mongoose.connection, mongoose.mongo)
+gfs.collection('images')
+
 mongoose.connection.once('open', () => {
   console.log(`connected to database: ${url}`)
   app.db = mongoose.connection
-  gfs = Grid(app.db, mongoose.mongo)
-  gfs.collection('images')
-})
-
-// Create storage engine
-const storage = new GridFsStorage({
-  url: url,
-  file: (req, file) => {
-    return new Promise((resolve, reject) => {
-      crypto.randomBytes(16, (err, buf) => {
-        if (err) {
-          return reject(err)
-        }
-        const filename = buf.toString('hex') + path.extname(file.originalname)
-        const fileInfo = {
-          filename: filename,
-          bucketName: 'images',
-        }
-        resolve(fileInfo)
-      })
-    })
-  },
 })
 
 const run = async () => {
@@ -92,4 +71,5 @@ app.use(function(err, req, res, next) {
   })
 })
 
-module.exports = { app, storage }
+exports.gfs = gfs
+module.exports = app
